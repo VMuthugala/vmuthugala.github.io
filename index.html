@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Viraj Muthugala</title>
+<meta name="description" content="Viraj Muthugala — Senior Research Fellow at SUTD working on reconfigurable robotics, path planning, foundation models for robot autonomy and human-robot interaction.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: engineering-sheet grid — sticky left index on desktop, a tetromino "tiling robot" field in the hero, sections as numbered drawing sheets */
+:root{
+  --bg:#F3F5F4;
+  --surface:#FFFFFF;
+  --ink:#10191C;
+  --muted:#53625F;
+  --line:#D5DCDA;
+  --grid:#E3E8E6;
+  --accent:#D9531E;      /* machine orange */
+  --accent-ink:#B5410F;
+  --teal:#1C6B73;
+  --teal-soft:#DDEDEE;
+  --chip:#E8EDEB;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --step--1:.8125rem; --step-0:1rem; --step-1:1.2rem; --step-2:1.55rem; --step-3:2.1rem; --step-4:clamp(2.6rem,6vw,4.6rem);
+  --gutter:clamp(16px,4vw,48px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1416;--surface:#151D20;--ink:#E6EDEB;--muted:#97A6A3;--line:#2A3538;--grid:#1B2427;
+  --accent:#F07040;--accent-ink:#F58A5E;--teal:#5DB3BB;--teal-soft:#16302F;--chip:#1E292C;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1416;--surface:#151D20;--ink:#E6EDEB;--muted:#97A6A3;--line:#2A3538;--grid:#1B2427;
+  --accent:#F07040;--accent-ink:#F58A5E;--teal:#5DB3BB;--teal-soft:#16302F;--chip:#1E292C;color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+img{max-width:100%}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:var(--step-0);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.08;margin:0}
+.mono{font-family:var(--f-mono)}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1180px;margin:0 auto;padding-inline:var(--gutter);display:flex;align-items:center;gap:24px;height:56px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.brand svg{flex:none}
+.nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--f-mono);font-size:var(--step--1);color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:4px;white-space:nowrap}
+.nav a:hover,.nav a.on{color:var(--ink);background:var(--chip)}
+@media (max-width:820px){.bar-in{gap:12px}.brand span{display:none}}
+
+.wrap{max-width:1180px;margin:0 auto;padding-inline:var(--gutter)}
+
+/* hero */
+.hero{padding-block:clamp(40px,7vw,88px) 40px;max-width:900px}
+.eyebrow{font-family:var(--f-mono);font-size:var(--step--1);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow i{width:18px;height:2px;background:var(--accent);display:inline-block}
+.hero h1{font-size:var(--step-4);font-weight:800;letter-spacing:-.025em;margin-top:14px}
+.hero h1 .lite{font-weight:500;color:var(--muted);display:block;font-size:.42em;letter-spacing:-.005em;margin-top:12px;line-height:1.25}
+.lede{font-size:var(--step-1);line-height:1.55;max-width:60ch;margin:22px 0 0;color:var(--ink)}
+.lede b{font-weight:600}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{font-family:var(--f-mono);font-size:var(--step--1);display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:4px;color:var(--ink);text-decoration:none;background:var(--surface);cursor:pointer}
+.btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* paper reference chips in research themes */
+.refs{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:8px}
+.ref{font-family:var(--f-mono);font-size:11.5px;padding:4px 8px;border:1px solid var(--line);border-radius:3px;background:var(--bg);color:var(--ink);cursor:pointer;line-height:1.3;text-align:left}
+.ref:hover{border-color:var(--accent);color:var(--accent-ink)}
+.ref .y{color:var(--muted);margin-left:5px}
+
+/* paper detail panel */
+.dlg-back[hidden]{display:none!important}
+.dlg-back{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,var(--ink) 45%,transparent);display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;width:min(680px,100%);max-height:calc(100% - 32px);overflow:auto;padding:clamp(20px,4vw,32px);box-shadow:0 24px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:14px}
+.dlg-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.dlg-x{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:4px;padding:6px 10px;cursor:pointer}
+.dlg h3{font-size:var(--step-2);font-weight:700;letter-spacing:-.01em}
+.dlg dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 16px;margin:0;font-size:.93rem}
+.dlg dt{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.dlg dd{margin:0}
+.dlg dd mark{background:none;color:var(--ink);font-weight:600}
+.dlg-act{display:flex;flex-wrap:wrap;gap:10px;padding-top:6px}
+@media (max-width:520px){.dlg dl{grid-template-columns:1fr;gap:2px}.dlg dd{margin-bottom:8px}}
+
+.pub .t button{all:unset;cursor:pointer;font-weight:600;line-height:1.4}
+.pub .t button:hover{color:var(--accent-ink)}
+.pub .t button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pub.flash{animation:flash 2.2s ease-out}
+@keyframes flash{0%,40%{background:color-mix(in srgb,var(--accent) 14%,transparent)}100%{background:transparent}}
+@media (prefers-reduced-motion: reduce){.pub.flash{animation:none;background:color-mix(in srgb,var(--accent) 10%,transparent)}}
+.roles{font-family:var(--f-mono);font-size:10.5px;color:var(--accent-ink);margin-left:6px}
+.sel{font-family:var(--f-mono);font-size:12.5px;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink)}
+.grp{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:30px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--ink);display:flex;justify-content:space-between}
+.scopenote{font-size:.9rem;color:var(--muted);margin:18px 0 0}
+
+/* metrics strip */
+.metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:8px}
+.metric{padding:18px 16px;border-left:1px solid var(--line)}
+.metric:first-child{border-left:0;padding-left:0}
+.metric b{display:block;font-family:var(--f-display);font-size:var(--step-3);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.metric span{display:block;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.35}
+@media (max-width:880px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.metric:nth-child(4){border-left:0;padding-left:0}.metric:nth-child(n+4){border-top:1px solid var(--line)}}
+@media (max-width:460px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{border-left:0!important;padding-left:0!important}.metric:nth-child(even){padding-left:16px!important;border-left:1px solid var(--line)!important}.metric:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* sections */
+section.sheet{padding-block:clamp(56px,8vw,96px) 0}
+.sh{display:grid;grid-template-columns:140px minmax(0,1fr);gap:24px;align-items:baseline;margin-bottom:32px}
+.sh .no{font-family:var(--f-mono);font-size:var(--step--1);color:var(--accent-ink);letter-spacing:.06em}
+.sh h2{font-size:var(--step-3);font-weight:700;letter-spacing:-.02em}
+.sh p{grid-column:2;margin:10px 0 0;color:var(--muted);max-width:62ch}
+.body{display:grid;grid-template-columns:140px minmax(0,1fr);gap:24px}
+.body>*{grid-column:2;min-width:0}
+@media (max-width:720px){.sh,.body{grid-template-columns:1fr;gap:6px}.sh p,.body>*{grid-column:1}}
+
+/* news */
+.news{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.news li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:20px;padding:14px 0;border-bottom:1px solid var(--line)}
+.news time{font-family:var(--f-mono);font-size:var(--step--1);color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.news .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-right:8px}
+@media (max-width:520px){.news li{grid-template-columns:1fr;gap:2px}}
+
+/* research themes */
+.themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.theme{padding:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px;background:var(--surface)}
+.theme svg{width:44px;height:44px}
+.theme h3{font-size:var(--step-1);font-weight:700}
+.theme p{margin:0;color:var(--muted);font-size:.95rem}
+@media (max-width:720px){.themes{grid-template-columns:1fr}}
+
+/* robots */
+.robots{display:flex;flex-wrap:wrap;gap:8px}
+.robot{font-family:var(--f-mono);font-size:12.5px;padding:7px 11px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.robot b{font-weight:500;color:var(--ink)}
+.robot span{color:var(--muted)}
+
+/* publications */
+.pubtools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface)}
+.seg button{font-family:var(--f-mono);font-size:12.5px;padding:8px 12px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-left:1px solid var(--line)}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button .n{opacity:.65;margin-left:6px;font-variant-numeric:tabular-nums}
+.search{flex:1 1 220px;min-width:0;font-family:var(--f-body);font-size:.95rem;padding:8px 12px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink)}
+.chk{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer}
+.venuehl{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-bottom:22px}
+.venuehl b{color:var(--ink);font-weight:500}
+.yr{font-family:var(--f-display);font-weight:700;font-size:var(--step-2);margin:28px 0 6px;display:flex;align-items:baseline;gap:10px}
+.yr small{font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--muted)}
+.pub{display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.pub .id{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:3px}
+.pub .t{font-weight:600;line-height:1.4}
+.pub .a{font-size:.9rem;color:var(--muted);margin-top:3px}
+.pub .a mark{background:none;color:var(--ink);font-weight:600}
+.pub .v{font-size:.9rem;margin-top:3px;font-style:italic}
+.badges{display:inline-flex;gap:6px;margin-left:6px;vertical-align:1px;font-style:normal}
+.bdg{font-family:var(--f-mono);font-size:10.5px;padding:1px 6px;border-radius:3px;background:var(--chip);color:var(--muted);font-style:normal;white-space:nowrap}
+.bdg.q1{background:var(--teal-soft);color:var(--teal)}
+.bdg.aw{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent-ink)}
+.empty{padding:24px 0;color:var(--muted)}
+
+/* grants */
+.grants{display:grid;gap:0;border-top:1px solid var(--line)}
+.grant{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;padding:18px 0;border-bottom:1px solid var(--line)}
+.grant h3{font-size:var(--step-1);font-weight:700}
+.grant .amt{font-family:var(--f-display);font-weight:700;font-size:var(--step-2);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.grant .meta{grid-column:1/-1;font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 18px}
+.grant p{grid-column:1/-1;margin:0;font-size:.93rem;color:var(--muted);max-width:75ch}
+@media (max-width:560px){.grant{grid-template-columns:1fr}.grant .amt{text-align:left}}
+.total{display:flex;justify-content:space-between;gap:16px;padding:14px 0;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.total b{color:var(--ink);font-weight:500}
+
+/* two-col lists */
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 40px}
+@media (max-width:720px){.cols{grid-template-columns:1fr}}
+.block h3{font-family:var(--f-mono);font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.rows li .d{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;padding-top:2px}
+.rows li .s{grid-column:1/-1;font-size:.85rem;color:var(--muted);margin-top:-2px}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tl .when{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:3px}
+.tl .what b{font-weight:600}
+.tl .what div{color:var(--muted);font-size:.92rem}
+@media (max-width:560px){.tl li{grid-template-columns:1fr;gap:2px}}
+
+.ip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ip article{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.ip .pn{font-family:var(--f-mono);font-size:12px;color:var(--accent-ink)}
+.ip h3{font-size:1.05rem;font-weight:700}
+.ip p{margin:0;font-size:.88rem;color:var(--muted)}
+@media (max-width:820px){.ip{grid-template-columns:1fr}}
+
+.partners{display:flex;flex-wrap:wrap;gap:10px}
+.partner{border:1px solid var(--line);border-radius:4px;padding:10px 14px;background:var(--surface);display:flex;flex-direction:column;min-width:0}
+.partner b{font-family:var(--f-display);font-weight:700}
+.partner span{font-size:.82rem;color:var(--muted)}
+.partner i{font-style:normal;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+
+.people{columns:2;column-gap:40px;font-size:.93rem}
+.people li{break-inside:avoid}
+@media (max-width:620px){.people{columns:1}}
+
+/* contact */
+.contact{margin-top:clamp(56px,8vw,96px);background:var(--ink);color:var(--bg);border-radius:8px;padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px}
+.contact h2{font-size:var(--step-3);font-weight:700;letter-spacing:-.02em}
+.contact p{color:color-mix(in srgb,var(--bg) 72%,var(--ink))}
+.addr{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;font-family:var(--f-mono);font-size:.95rem}
+.addr code{font-family:inherit;user-select:all;padding:8px 10px;border:1px solid color-mix(in srgb,var(--bg) 25%,transparent);border-radius:4px;overflow-wrap:anywhere}
+.copy{font-family:var(--f-mono);font-size:12px;padding:8px 10px;border-radius:4px;border:1px solid color-mix(in srgb,var(--bg) 25%,transparent);background:transparent;color:var(--bg);cursor:pointer}
+.copy:hover{border-color:var(--accent)}
+.profiles{list-style:none;margin:0;padding:0;display:grid;gap:0;align-self:end}
+.profiles a{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid color-mix(in srgb,var(--bg) 18%,transparent);color:var(--bg);text-decoration:none;font-family:var(--f-mono);font-size:.9rem}
+.profiles a:hover{color:var(--accent)}
+@media (max-width:760px){.contact{grid-template-columns:1fr}}
+footer{padding-block:28px 40px;font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="#top" aria-label="Viraj Muthugala, home">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="11" width="10" height="10" fill="var(--ink)"/><rect x="11" y="11" width="10" height="10" fill="var(--ink)"/><rect x="11" y="0" width="10" height="10" fill="var(--accent)"/><rect x="0" y="0" width="10" height="10" fill="none" stroke="var(--line)"/></svg>
+      <span>Viraj Muthugala</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#news">News</a><a href="#research">Research</a><a href="#publications">Publications</a><a href="#funding">Funding</a><a href="#experience">Experience</a><a href="#mentoring">Mentoring</a><a href="#awards">Awards</a><a href="#service">Service</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <div class="eyebrow"><i></i>Senior Research Fellow · SUTD, Singapore</div>
+      <h1>Viraj Muthugala<span class="lite">Robots that change shape, plan their own coverage, and understand the people they work with.</span></h1>
+      <p class="lede">I am a Senior Research Fellow in the Engineering Product Development Pillar at the <b>Singapore University of Technology and Design</b>, where I lead research projects spanning robotics and AI. I was a Visiting Researcher at the Dyson School of Design Engineering, <b>Imperial College London</b> (2025–26). My work covers reconfigurable robots, coverage path planning, foundation models for robot autonomy, human–robot interaction and robot-inclusive design of buildings.</p>
+      <div class="cta">
+        <a class="btn primary" href="#publications">Publications →</a>
+        <a class="btn" href="https://scholar.google.com/citations?user=Wu6gMCEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
+        <a class="btn" href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics" aria-label="Research metrics">
+    <div class="metric"><b>100+</b><span>refereed papers</span></div>
+    <div class="metric"><b>1,744</b><span>citations<br>Google Scholar</span></div>
+    <div class="metric"><b>23</b><span>h-index</span></div>
+    <div class="metric"><b>40</b><span>JCR Q1 journal papers</span></div>
+    <div class="metric"><b>3</b><span>granted SG patents</span></div>
+    <div class="metric"><b>SGD 10M+</b><span>in grants · led proposal writing and research execution</span></div>
+  </div>
+
+  <!-- NEWS -->
+  <section class="sheet" id="news">
+    <div class="sh"><span class="no">01 / NEWS</span><h2>Recent</h2></div>
+    <div class="body">
+      <ul class="news">
+        <li><time>Oct 2026</time><div><span class="k">Service</span>Appointed Associate Editor for <b>ICRA 2027</b>.</div></li>
+        <li><time>Sep 2026</time><div><span class="k">Paper</span>“GAT-based Reinforcement Learning for NBV Selection in Semantic Visual Active SLAM under Dynamic Environments” accepted at <b>IROS 2026</b>.</div></li>
+        <li><time>Jun 2026</time><div><span class="k">Panel</span>Panelist at the Workshop on Circular Robotics: Designing Sustainable Autonomy for a Finite World, <b>ICRA 2026</b>, Vienna.</div></li>
+        <li><time>Jun 2026</time><div><span class="k">Paper</span>“LARVO-RRT*: Learning Guided Adaptive Reconfiguration with Vector field Oriented RRT*” presented at <b>ICRA 2026</b>, Vienna.</div></li>
+        <li><time>Jun 2026</time><div><span class="k">Paper</span>“Design by Robot: Relocating Obstacles for Efficient Mobile Robot Navigation” presented as a late-breaking result at <b>ICRA 2026</b>, Vienna.</div></li>
+        <li><time>May 2026</time><div><span class="k">Talk</span>“Robotics and AI for Inspection and Maintenance: Challenges and Opportunities”, monthly webinar of the Institution of Engineers, Sri Lanka.</div></li>
+        <li><time>May 2026</time><div><span class="k">Panel</span>Panelist at the Applied Robotics &amp; Artificial Intelligence Symposium (ARAIS) 2026, Singapore.</div></li>
+        <li><time>Feb 2026</time><div><span class="k">Talk</span>“Autonomy and Planning Across Reconfigurable Robots, Morphologies, and Environments”, Morph Lab, Imperial College London.</div></li>
+        <li><time>Nov 2025</time><div><span class="k">Visit</span>Started a visiting researcher post at the Dyson School of Design Engineering, Imperial College London, hosted by Prof. Thrishantha Nanayakkara.</div></li>
+        <li><time>Sep 2025</time><div><span class="k">Award</span>Best Paper Award at the International Conference on Social Robotics + AI 2025, Naples, for human–robot co-design of cleaning layouts with a vision-language model.</div></li>
+        <li><time>Jul 2025</time><div><span class="k">Patents</span>Three Singapore patents granted: inspection robot, robot coupling mechanism and beach litter-removal robot.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section class="sheet" id="research">
+    <div class="sh"><span class="no">02 / RESEARCH</span><h2>What I work on</h2>
+      <p>Most of my work starts from a real deployment: cleaning, inspection and maintenance robots that have to run in food courts, ship yards, drains, pavements and hospitals. Select a paper to see its details.</p></div>
+    <div class="body">
+      <div class="themes">
+        <div class="theme">
+          <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="2" y="22" width="9" height="9" fill="var(--ink)"/><rect x="12" y="22" width="9" height="9" fill="var(--ink)"/><rect x="22" y="22" width="9" height="9" fill="var(--ink)"/><rect x="22" y="12" width="9" height="9" fill="var(--accent)"/></svg>
+          <h3>Reconfigurable robotics</h3>
+          <p>Tiling, size-variable and inter-reconfigurable modular robots that change morphology to fit obstacles, cover more area and dock with each other.</p>
+          <div class="refs" data-refs="J59,J32,J19,J39,J22,J47,J52,C18,C1,C2,C26,C28" aria-label="Key papers"></div>
+        </div>
+        <div class="theme">
+          <svg viewBox="0 0 44 44" aria-hidden="true"><path d="M4 6h36v8H4v8h36v8H4v8h36" fill="none" stroke="var(--ink)" stroke-width="2.5"/><circle cx="40" cy="38" r="3.5" fill="var(--accent)"/></svg>
+          <h3>Coverage &amp; path planning</h3>
+          <p>Complete coverage that accounts for energy, risk and shape: bio-inspired neural networks, reinforcement learning, metaheuristics and multi-agent scheduling.</p>
+          <div class="refs" data-refs="J30,J1,J31,J42,C3,C27,C25,C24,C17,C30" aria-label="Key papers"></div>
+        </div>
+        <div class="theme">
+          <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="6" y="10" width="32" height="22" rx="3" fill="none" stroke="var(--ink)" stroke-width="2.5"/><circle cx="16" cy="21" r="3" fill="var(--accent)"/><circle cx="28" cy="21" r="3" fill="var(--accent)"/><path d="M22 4v6M14 38h16" stroke="var(--ink)" stroke-width="2.5"/></svg>
+          <h3>Foundation models for autonomy</h3>
+          <p>Vision-language and foundation models for robot task planning, the safety of VLM-controlled robots against physical prompt injection, and human–robot co-design of the spaces robots work in.</p>
+          <div class="refs" data-refs="R1,R2,C21" aria-label="Key papers"></div>
+        </div>
+        <div class="theme">
+          <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="14" cy="14" r="6" fill="none" stroke="var(--ink)" stroke-width="2.5"/><path d="M4 38c0-8 4-13 10-13s10 5 10 13" fill="none" stroke="var(--ink)" stroke-width="2.5"/><rect x="28" y="22" width="12" height="16" rx="2" fill="var(--accent)"/></svg>
+          <h3>Human–robot interaction</h3>
+          <p>Robots that interpret uncertain spatial language, read gestures and approach people appropriately. My PhD used neuro-fuzzy methods for navigational commands.</p>
+          <div class="refs" data-refs="J46,J9,C29,C42,C39,C40,C41,C33,C34,C35,C36,C9,C10,C45,C46,C11,C12" aria-label="Key papers"></div>
+        </div>
+        <div class="theme">
+          <svg viewBox="0 0 44 44" aria-hidden="true"><path d="M4 40V18l18-12 18 12v22z" fill="none" stroke="var(--ink)" stroke-width="2.5"/><rect x="17" y="28" width="10" height="12" fill="var(--accent)"/></svg>
+          <h3>Robot-inclusive design</h3>
+          <p>Auditing and designing buildings so robots can work in them, from lighting and floor unevenness to false ceilings, drains and tactile markers.</p>
+          <div class="refs" data-refs="J48,J35,J38,J41,J37,J49,J54,C5" aria-label="Key papers"></div>
+        </div>
+        <div class="theme">
+          <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="6" y="14" width="32" height="16" rx="8" fill="none" stroke="var(--ink)" stroke-width="2.5"/><circle cx="14" cy="34" r="4" fill="var(--ink)"/><circle cx="30" cy="34" r="4" fill="var(--ink)"/><path d="M38 22h4" stroke="var(--accent)" stroke-width="3"/></svg>
+          <h3>Service &amp; field robots</h3>
+          <p>Design and control of robots for ship-hull blasting, facade and wall cleaning, aircraft inspection, drain and ceiling inspection, and outdoor sweeping.</p>
+          <div class="refs" data-refs="J40,J57,J58,C4,C7,C32,C8,C20" aria-label="Key papers"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section class="sheet" id="publications">
+    <div class="sh"><span class="no">03 / PUBLICATIONS</span><h2>Publications</h2></div>
+    <div class="body">
+      <div>
+        <div class="venuehl">
+          <span><b>40</b> JCR Q1</span><span><b>16</b> JCR Q2</span><span><b>13</b> IROS</span><span><b>7</b> ICRA</span><span><b>4</b> RO-MAN</span><span><b>3</b> FUZZ-IEEE</span><span><b>2</b> SMC</span><span><b>2</b> ReMAR</span>
+        </div>
+        <div class="pubtools">
+          <div class="seg" role="group" aria-label="Which papers">
+            <button type="button" data-scope="sel" aria-pressed="true">Selected<span class="n" id="n-sel"></span></button>
+            <button type="button" data-scope="J" aria-pressed="false">All journals<span class="n" id="n-J"></span></button>
+            <button type="button" data-scope="C" aria-pressed="false">All conferences<span class="n" id="n-C"></span></button>
+          </div>
+          <input id="pubsearch" class="search" type="search" placeholder="Search title, venue or co-author" aria-label="Search publications">
+        </div>
+        <div id="publist"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNDING -->
+  <section class="sheet" id="funding">
+    <div class="sh"><span class="no">04 / FUNDING &amp; IP</span><h2>Grants, patents and partners</h2>
+      <p>SGD 11.15M in competitive grants. I prepared most of each proposal, from methodology and literature review to research plans, and lead the research execution once funded. PI on all: Prof. Mohan Rajesh Elara.</p></div>
+    <div class="body">
+      <div>
+        <div class="grants">
+          <div class="grant"><h3>LEO 1.0: A New Class of Bed Making Robot</h3><div class="amt">SGD 2.73M</div>
+            <div class="meta"><span>National Robotics Programme</span><span>2025</span><span>M25N4N2028</span></div>
+            <p>Wrote most of the technical proposal on embodied AI and large-scale dataset collection.</p></div>
+          <div class="grant"><h3>Osprey: Bespoke Robot for Decontamination Works</h3><div class="amt">SGD 2.22M</div>
+            <div class="meta"><span>National Environment Agency</span><span>2024</span><span>T2-2024-1D-01</span></div>
+            <p>Wrote most of the proposal: methodology, literature review, path planning and HRI plans.</p></div>
+          <div class="grant"><h3>PANTHERA 2.0: Deployable Autonomous Pavement Sweeping Robot through Public Trials</h3><div class="amt">SGD 1.2M</div>
+            <div class="meta"><span>National Robotics Programme</span><span>2024</span><span>M23NBK0065</span></div>
+            <p>Wrote most of the proposal, including methodology and research plans.</p></div>
+          <div class="grant"><h3>ERMINE III: Deployable Reconfigurable Robots</h3><div class="amt">SGD 3M</div>
+            <div class="meta"><span>National Robotics Programme</span><span>2023</span><span>M22NBK0054</span></div>
+            <p>Prepared most of Work Package 1, complete multi-dimensional coverage planning in reconfigurable robots.</p></div>
+          <div class="grant"><h3>Advanced ROS2-native Platform Technologies for Cross-sectorial Robotics Adoption</h3><div class="amt">SGD 2M</div>
+            <div class="meta"><span>A*STAR</span><span>2022</span><span>M21K1a0104</span></div>
+            <p>Contributed to the literature review and methodology.</p></div>
+        </div>
+        <div class="total"><span>Total across five awards</span><b class="mono">SGD 11.15M</b></div>
+
+        <div class="block" style="margin-top:36px"><h3>Granted patents · Singapore</h3></div>
+        <div class="ip">
+          <article><span class="pn">No. 30202500684R · Jul 2025</span><h3>Mobile Robot for Inspection</h3><p>Building infrastructure audit robot (Meerkat).</p></article>
+          <article><span class="pn">No. 30202500716S · Aug 2025</span><h3>Coupling Mechanism for a Robot</h3><p>Error-tolerant, directionless coupling for reconfigurable modular robots.</p></article>
+          <article><span class="pn">No. 30202500829P · Jul 2025</span><h3>Robot for Litter Removal</h3><p>Turaco, a beach cleaning robot that removes litter from sand.</p></article>
+        </div>
+
+        <div class="block" style="margin-top:36px"><h3>Industry collaborations</h3></div>
+        <div class="partners">
+          <div class="partner"><b>Obayashi Corporation</b><span>Deployable construction robots</span><i>2025–present</i></div>
+          <div class="partner"><b>Wefaa Robotics</b><span>Reconfigurable robotics</span><i>2024–present</i></div>
+          <div class="partner"><b>Intrinsic (Alphabet)</b><span>Resource-aware multi-robot coordination</span><i>2022–2026</i></div>
+          <div class="partner"><b>Lionsbot</b><span>Autonomous floor cleaning</span><i>2021–2022</i></div>
+          <div class="partner"><b>Oceania Robotics</b><span>Autonomous floor cleaning</span><i>2021–2022</i></div>
+          <div class="partner"><b>Brightsun Marine</b><span>Ship hull maintenance</span><i>2019–2021</i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="sheet" id="experience">
+    <div class="sh"><span class="no">05 / EXPERIENCE</span><h2>Experience and education</h2></div>
+    <div class="body">
+      <div class="block"><h3>Work experience</h3></div>
+      <ul class="tl">
+        <li><span class="when">Oct 2024 – now</span><div class="what"><b>Senior Research Fellow</b><div>Engineering Product Development Pillar, SUTD · PI: Prof. Mohan Rajesh Elara</div></div></li>
+        <li><span class="when">Nov 2025 – Feb 2026</span><div class="what"><b>Visiting Researcher</b><div>Dyson School of Design Engineering, Imperial College London · Host: Prof. Thrishantha Nanayakkara</div></div></li>
+        <li><span class="when">Oct 2021 – Oct 2024</span><div class="what"><b>Research Fellow II</b><div>Engineering Product Development Pillar, SUTD</div></div></li>
+        <li><span class="when">Oct 2018 – Oct 2021</span><div class="what"><b>Research Fellow I</b><div>Engineering Product Development Pillar, SUTD</div></div></li>
+        <li><span class="when">Aug 2021</span><div class="what"><b>Instructor</b><div>FACT programme, Design Thinking &amp; Innovation · SUTD and Prasetiya Mulya University</div></div></li>
+        <li><span class="when">Apr – Aug 2018</span><div class="what"><b>Visiting Lecturer</b><div>Dept. of Computational Mathematics, University of Moratuwa · CM 4310 Artificial Neural Networks and Evolutionary Computing</div></div></li>
+        <li><span class="when">Jul 2014 – Sep 2018</span><div class="what"><b>Research Scholar and Visiting Instructor</b><div>Dept. of Electrical Engineering, University of Moratuwa · laboratory and tutorial classes</div></div></li>
+        <li><span class="when">Apr – Jun 2014</span><div class="what"><b>Temporary Instructor</b><div>Dept. of Electrical Engineering, University of Moratuwa · laboratory and tutorial classes</div></div></li>
+      </ul>
+      <div class="block" style="margin-top:36px"><h3>Education</h3></div>
+      <ul class="tl">
+        <li><span class="when">Aug 2014 – Jul 2018</span><div class="what"><b>PhD, University of Moratuwa</b><div>Enhancing Interpretation of Uncertain Information in Navigational Commands for Service Robots Using Neuro-Fuzzy Approach · Advisor: Dr. A. G. Buddhika P. Jayasekara</div></div></li>
+        <li><span class="when">Jul 2009 – Mar 2014</span><div class="what"><b>BSc Eng (Hons), Electrical Engineering, University of Moratuwa</b><div>First class · GPA 3.82 / 4.2 · Dean’s List four semesters · EESoc best undergraduate project award</div></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- MENTORING -->
+  <section class="sheet" id="mentoring">
+    <div class="sh"><span class="no">06 / MENTORING</span><h2>Students and researchers I mentor</h2>
+      <p>6 PhD students, 7 MSc students, 16 research assistants and engineers, and more than 25 interns, exchange and final-year students from Singapore, Sri Lanka, the US, Europe, India and China.</p></div>
+    <div class="body">
+      <div class="cols">
+        <div class="block"><h3>PhD</h3>
+          <ul class="rows">
+            <li>Yang Zhenyuan<span class="d">2023 – now</span></li>
+            <li>Rishan Sachinthana<span class="d">2023 – 2026</span></li>
+            <li>Arjo Chakravarty<span class="d">2022 – 2026</span></li>
+            <li>Ash Wan Yaw Sang<span class="d">2021 – 2025</span></li>
+            <li>Braulio Felix Gomez<span class="d">2021 – 2025</span></li>
+            <li>Soon Kiat Matthew Yeo<span class="d">2019 – 2024</span></li>
+          </ul>
+        </div>
+        <div class="block"><h3>MSc</h3>
+          <ul class="rows">
+            <li>Aryan Kurungadathil<span class="d">2024 – 2026</span></li>
+            <li>Chia Hwe Huang<span class="d">2024 – 2026</span></li>
+            <li>Shasheeka Himaruwan<span class="d">2023 – 2025</span></li>
+            <li>Kotaprolu Smaran<span class="d">2023 – 2025</span></li>
+            <li>Shameer Ahamed<span class="d">2022 – 2024</span></li>
+            <li>Isira Damsith Wijegunawardana<span class="d">2021 – 2023</span></li>
+            <li>Anilkumar Ezhilarasu<span class="d">2021 – 2023</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="block" style="margin-top:32px"><h3>Research assistants and engineers</h3>
+        <ul class="rows people">
+          <li>Saurav Ghante Anantha Padmanabha</li>
+          <li>Jun Hua</li>
+          <li>Koppaka Ganesh Sai Apuroop</li>
+          <li>Qi Boon Ng</li>
+          <li>Yi Jin Ng</li>
+          <li>Raihan Enjikalayil Abdulkader</li>
+          <li>Selvakumaran</li>
+          <li>Pey Jia Jie Javier</li>
+          <li>Zeng Zimou</li>
+          <li>Sairam Borusu</li>
+          <li>Chee Gen Moo</li>
+          <li>Sriniketh Konduri</li>
+          <li>Eduardo Sanchez Cruz</li>
+          <li>Raul Fernando Garcia Azcarate</li>
+          <li>Akhil Jayadeep</li>
+          <li>Aung Kyaw Zin</li>
+        </ul>
+      </div>
+      <div class="block" style="margin-top:32px"><h3>Undergraduates, interns and exchange students</h3>
+        <ul class="rows people">
+          <li>Maggie Liu, Nikki Guo · iUROP, University of Waterloo<span class="d">2026</span></li>
+          <li>Jona Benjamin Patig · iUROP, University of Twente<span class="d">2026</span></li>
+          <li>S. Sreeram Nair, Anil, Swathi · FYP, Amrita University<span class="d">2024–25</span></li>
+          <li>Alan Li Pusong · Intern, UIUC<span class="d">2024</span></li>
+          <li>Charan Vikram · Intern, VIT<span class="d">2024</span></li>
+          <li>Dojitha Mirihagalla, Melisa Arukgoda, Randika Perera · Interns, Univ. of Moratuwa<span class="d">2023–24</span></li>
+          <li>M.R. Dilhara, U.P. Ruwanpura, M.S. Amith · FYP, Univ. of Moratuwa<span class="d">2023–24</span></li>
+          <li>Anica Krueger, Paola Flores · iUROP, University of Twente<span class="d">2023</span></li>
+          <li>Thelma Run Edvaldsdottir · iUROP, Reykjavik University<span class="d">2023</span></li>
+          <li>Luke Weaver · iUROP, Lehigh University<span class="d">2023</span></li>
+          <li>Natalie Ratzlaff · iUROP, UC San Diego<span class="d">2023</span></li>
+          <li>H.A.D. Madhusanka, K.P.G. Sandamal, R.M.S. Lakruwani · FYP, Univ. of Moratuwa<span class="d">2022–23</span></li>
+          <li>Ishneet Singh · SUTD-RMP, Temasek Junior College<span class="d">2022</span></li>
+          <li>Soh Wei Si · Undergraduate intern, SUTD<span class="d">2021</span></li>
+          <li>Phone Thiha Kyaw · Intern<span class="d">2020–21</span></li>
+          <li>Suresh Raj Vishaal, Htet Lin Nay · Interns<span class="d">2019–20</span></li>
+          <li>Ayyalusami Vengadesh, Sriharsha Ghanta · Interns<span class="d">2018–19</span></li>
+          <li>Xinke Wu · Exchange student, Zhejiang University<span class="d">2018</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- AWARDS -->
+  <section class="sheet" id="awards">
+    <div class="sh"><span class="no">07 / HONOURS</span><h2>Awards</h2></div>
+    <div class="body">
+      <div class="cols">
+        <div class="block"><h3>Research</h3>
+          <ul class="rows">
+            <li>Best Paper Award, ICSR + AI 2025<span class="d">Sep 2025</span></li>
+            <li>New Generation Star Award, IROS 2024<span class="d">Oct 2024</span></li>
+            <li>First runner-up, MathWorks Mini Drone Competition, IROS 2018<span class="d">Oct 2018</span></li>
+            <li>Nanjing City Prize, Robotics Innovation Awards, RO-MAN 2018<span class="d">Aug 2018</span></li>
+            <li>Best Paper, Robotics and Control track, MERCon 2016<span class="d">Apr 2016</span></li>
+            <li>EESoc Award, best Electrical Engineering undergraduate project<span class="d">Dec 2014</span></li>
+            <li>Travel grants<span class="d">2016 – 25</span><span class="s">IES SYPA Travel Award, IROS 2025 · IEEE RAS, IROS 2016 and 2017 · NSF Sri Lanka, IROS 2017 · IEEE CIS and EUSFLAT, FUZZ-IEEE 2017</span></li>
+          </ul>
+        </div>
+        <div class="block"><h3>Design</h3>
+          <ul class="rows">
+            <li>Melbourne Design Awards, Gold<span class="d">Jul 2025</span><span class="s">KOALA, plant health assessment and shrub pruning robot</span></li>
+            <li>IDA Design Awards, Honorable Mention<span class="d">Jan 2025</span><span class="s">Meerkat, building infrastructure audit robot</span></li>
+            <li>IDA Design Awards, Gold<span class="d">Jan 2022</span><span class="s">flipX, compact reconfigurable chair for home workouts</span></li>
+            <li>IDA Design Awards, Silver ×2<span class="d">Jan 2022</span><span class="s">SoGa Chair; PlayBench</span></li>
+            <li>IDA Design Awards, Bronze<span class="d">Jan 2022</span><span class="s">Kanga, a childcare seat</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE -->
+  <section class="sheet" id="service">
+    <div class="sh"><span class="no">08 / SERVICE</span><h2>Talks and professional service</h2></div>
+    <div class="body">
+      <div class="cols">
+        <div class="block"><h3>Editorial</h3>
+          <ul class="rows">
+            <li>Associate Editor, ICRA 2027<span class="d">2026</span></li>
+            <li>Associate Editor, Frontiers in Robotics and AI<span class="d">2024 – now</span></li>
+            <li>Associate Editor, Frontiers in Manufacturing Technology<span class="d">2024 – now</span></li>
+            <li>Associate Editor, Discover Applied Sciences (Springer)<span class="d">2024 – now</span></li>
+            <li>Topic Editor, Electronics (MDPI)<span class="d">2021 – 23</span></li>
+          </ul>
+        </div>
+        <div class="block"><h3>Conference roles</h3>
+          <ul class="rows">
+            <li>Session Chair, IROS 2026, ARSO 2026, IROS 2022, AROB 2022, ReMAR 2021</li>
+            <li>Track Co-Chair, DTDA Japan 2025, 2026; MERCon 2025, 2026; EECon 2026</li>
+            <li>Program Co-Chair, EECon<span class="d">2024</span></li>
+            <li>Co-chair, Technical Program, IEEE R10 HTC<span class="d">2018</span></li>
+            <li>TPC member, ICIPRob, ICIAfS, EECon, RCAR, RAAICON<span class="d">2018 – 26</span></li>
+          </ul>
+        </div>
+        <div class="block"><h3>Invited talks &amp; panels</h3>
+          <ul class="rows">
+            <li>Panel, Circular Robotics workshop, ICRA 2026, Vienna<span class="d">Jun 2026</span></li>
+            <li>Invited talk, IESL monthly webinar<span class="d">May 2026</span></li>
+            <li>Panel, ARAIS 2026, Singapore<span class="d">May 2026</span></li>
+            <li>Guest talk, Morph Lab, Imperial College London<span class="d">Feb 2026</span></li>
+          </ul>
+        </div>
+        <div class="block"><h3>Robotics competitions</h3>
+          <ul class="rows">
+            <li>Organizing Committee, RoboRoarZ<span class="d">2023, 2024, 2025</span></li>
+            <li>Organizing Team, IEEE Region 10 Robotics Competition<span class="d">2022, 2024</span></li>
+            <li>Judge Panel, IEEE Region 10 Robotics Competition<span class="d">2023</span></li>
+            <li>Organizing Committee, Global Robotics Games<span class="d">2023</span></li>
+            <li>Judge Panel, iNTUition v9.0, IEEE NTU Student Branch<span class="d">2024</span></li>
+            <li>Guest Judge, Pei Hwa Virtual Hackathon<span class="d">2024</span></li>
+          </ul>
+        </div>
+        <div class="block"><h3>Reviewing &amp; examining</h3>
+          <ul class="rows">
+            <li>Reviewer for leading robotics journals and conferences</li>
+            <li>PhD/MSc thesis examiner, Sathyabama Institute of Science and Technology, India; University of Moratuwa, Sri Lanka</li>
+            <li>Grant evaluator, University of Moratuwa</li>
+            <li>Mentor, MOE Innovation Programme<span class="d">2025</span></li>
+          </ul>
+        </div>
+        <div class="block"><h3>Memberships &amp; advisory</h3>
+          <ul class="rows">
+            <li>Senior Member, IEEE (RAS, IES)<span class="d">2023 – now</span></li>
+            <li>Member, IEEE (RAS, SMC)<span class="d">2015 – 23</span></li>
+            <li>Product Advisory Council, Wefaa Robotics<span class="d">2024</span></li>
+            <li>Assistant Secretary, IEEE RAS Sri Lanka Section Chapter<span class="d">2017 – 19</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div>
+      <h2>Get in touch</h2>
+      <p>If my research interests you, I would be glad to hear from you, whether you are a researcher, a student or an industry partner. I welcome conversations about reconfigurable robots, robot autonomy, human–robot interaction and robots built for real deployments.</p>
+      <div class="addr"><code id="em1" data-u="viraj_jagathpriya" data-d="sutd.edu.sg">viraj_jagathpriya [at] sutd [dot] edu [dot] sg</code><button class="copy" type="button" data-copy="em1">Copy</button></div>
+      <p class="mono" style="font-size:.85rem;margin-top:18px">Engineering Product Development Pillar<br>Singapore University of Technology and Design<br>8 Somapah Road, Singapore 487372</p>
+    </div>
+    <ul class="profiles">
+      <li><a href="https://scholar.google.com/citations?user=Wu6gMCEAAAAJ&amp;hl=en" target="_blank" rel="noopener"><span>Google Scholar</span><span>↗</span></a></li>
+      <li><a href="http://orcid.org/0000-0002-3598-5570" target="_blank" rel="noopener"><span>ORCID 0000-0002-3598-5570</span><span>↗</span></a></li>
+      <li><a href="http://www.scopus.com/inward/authorDetails.url?authorID=56046158700&amp;partnerID=MN8TOARS" target="_blank" rel="noopener"><span>Scopus 56046158700</span><span>↗</span></a></li>
+      <li><a href="https://www.researchgate.net/profile/Viraj_Muthugala" target="_blank" rel="noopener"><span>ResearchGate</span><span>↗</span></a></li>
+    </ul>
+  </section>
+
+  <div class="dlg-back" id="dlg" hidden><div class="dlg" id="dlg-body" role="dialog" aria-modal="true" aria-labelledby="dlg-title"></div></div>
+
+  <footer><span>© 2026 M. A. Viraj J. Muthugala</span><span>Updated October 2026</span></footer>
+</main>
+
+<script>
+/* ---------- Publications data (from CV) ---------- */
+const P = [
+// [id, authors, title, venue, year, flags]  flags: q1/q2, aw=award text
+["J1","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, and M. R. Elara","Toward energy-efficient online Complete Coverage Path Planning of a ship hull maintenance robot based on Glasius Bio-inspired Neural Network","Expert Systems with Applications, vol. 187, 115940",2022,"Q1"],
+["J2","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, P. Veerajagadheswar, and M. R. Elara","Ensuring Area Coverage and Safety of a Reconfigurable Staircase Cleaning Robot","IEEE Access, vol. 9, pp. 150049–150059",2021,"Q2"],
+["J3","M. A. V. J. Muthugala, P. Palanisamy, S. M. B. P. Samarakoon, S. G. A. Padmanabha, M. R. Elara, and D. N. Terntzer","Raptor: A Design of a Drain Inspection Robot","Sensors, vol. 21, no. 17, 5742",2021,"Q1"],
+["J4","M. A. V. J. Muthugala, K. G. S. Apuroop, S. G. A. Padmanabha, S. M. B. P. Samarakoon, M. R. Elara, and R. Y. W. Wen","Falcon: A False Ceiling Inspection Robot","Sensors, vol. 21, no. 16, 5281",2021,"Q1"],
+["J5","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, M. M. Rayguru, R. Balakrishnan, and M. R. Elara","Wall-Following Behavior for a Disinfection Robot Using Type-1 and Type-2 Fuzzy Logic Systems","Sensors, vol. 20, no. 16",2020,"Q1"],
+["J6","M. A. V. J. Muthugala, A. V. Le, E. S. Cruz, M. R. Elara, P. Veerajagadheswar, and M. Kumar","A self-organizing fuzzy logic classifier for benchmarking robot-aided blasting of ship hulls","Sensors, vol. 20, no. 11",2020,"Q1"],
+["J7","M. A. V. J. Muthugala, P. H. D. A. S. Srimal, and A. G. B. P. Jayasekara","Improving Robot’s Perception of Uncertain Spatial Descriptors in Navigational Instructions by Evaluating Influential Gesture Notions","Journal on Multimodal User Interfaces",2020,"Q2"],
+["J8","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, and M. R. Elara","Tradeoff between Area Coverage and Energy Usage of a Self-Reconfigurable Floor Cleaning Robot based on User Preference","IEEE Access, vol. 8, pp. 76267–76275",2020,"Q1"],
+["J9","M. A. V. J. Muthugala, A. Vengadesh, X. Wu, M. R. Elara, M. Iwase, L. Sun, and J. Hao","Expressing Attention Requirement of a Floor Cleaning Robot through Interactive Lights","Automation in Construction, vol. 110, 103015",2020,"Q1"],
+["J10","M. A. V. J. Muthugala, M. Vega-Heredia, M. R. Elara, and S. R. Vishaal","Design and Control of a Wall Cleaning Robot with Adhesion-awareness","Symmetry, vol. 12, no. 1, 122",2020,"Q2"],
+["J11","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Improving understanding of navigational commands by adapting robot’s directional perception based on environment","Journal of Ambient Intelligence and Smart Environments, vol. 11, no. 2, pp. 135–148",2019,""],
+["J12","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","A Review of Service Robots Coping with Uncertain Information in Natural Language Instructions","IEEE Access, vol. 6",2018,"Q1"],
+["J13","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Enhancing User Satisfaction by Adapting Robot’s Perception of Uncertain Information Based on Environment and User Feedback","IEEE Access, vol. 5",2017,"Q1"],
+["J14","M. A. V. J. Muthugala, P. H. D. A. S. Srimal, and A. G. B. P. Jayasekara","Enhancing Interpretation of Ambiguous Voice Instructions based on Environment and User’s Intention for Improved Human Friendly Robot Navigation","Applied Sciences, vol. 7, no. 8",2017,""],
+["J15","H. D. S. Himaruwan, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, M. S. Ahamed, and M. R. Elara","Efficient Coverage Path Planning for a Decontamination Robot in Unknown Environments Using Reinforcement Learning","IEEE Access",2026,"Q2"],
+["J16","A. Chakravarty, M. X. Grey, M. A. V. J. Muthugala, and R. M. Elara","A Scalable Post-Processing Pipeline for Large-Scale Free-Space Multi-Agent Path Planning with PIBT","Mathematics",2026,"Q1"],
+["J17","Z. Yang, A. Ng, J. Yang, M. A. V. J. Muthugala, and M. R. Elara","A LiDAR-based Human Tracking and Interaction Framework for an Autonomous Pavement Cleaning Robot","Results in Engineering",2026,"Q1"],
+["J18","Z. Yang, A. W. Y. Sang, M. A. V. J. Muthugala, and M. R. Elara","Mutual Information-based Hierarchical NBV Decision for Active Semantic Visual SLAM under Dynamic Environments","Scientific Reports",2026,"Q1"],
+["J19","R. A. Perera, H. D. S. Himaruwan, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Energy-Efficient Rendezvous for Docking of Inter-Reconfigurable Modular Robots in Unknown Environments","IEEE/ASME Transactions on Mechatronics",2025,"Q1"],
+["J20","B. F. Gómez, J. W. S. Lee, A. Jayadeep, M. A. V. J. Muthugala, and M. R. Elara","Efficient Robot-Aided Outdoor Cleaning with a Glasius Bio-Inspired Neural Network and Vision-Based Adaptation","Mathematics",2025,"Q1"],
+["J21","A. Chakravarty, M. X. Grey, M. A. V. J. Muthugala, and R. M. Elara","Toward Optimal Multi-Agent Robot and Lift Schedules via Boolean Satisfiability","Mathematics",2025,"Q1"],
+["J22","A. Y. S. Wan, Y. Zhenyuan, M. C. Gen, M. A. V. J. Muthugala, and M. R. Elara","Inter-Star: A Modified Multi A-Star Approach for Inter-Reconfigurable Robots","Expert Systems with Applications",2025,"Q1"],
+["J23","W. K. R. Sachinthana, I. D. Wijegunawardana, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Energy-Efficient Coverage Path Planning for a Reconfigurable Robot","IEEE Access, vol. 13, pp. 128673–128684",2025,"Q2"],
+["J24","S. Pookkuttath, A. K. Zin, A. Jayadeep, M. A. V. J. Muthugala, and M. R. Elara","AI-Enabled Condition Monitoring Framework for Autonomous Pavement Sweeping Robots","Mathematics",2025,"Q1"],
+["J25","R. F. G. Azcarate, A. Jayadeep, A. K. Zin, J. W. S. Lee, M. A. V. J. Muthugala, and M. R. Elara","Adaptive Outdoor Cleaning Robot with Real-Time Terrain Perception and Fuzzy Control","Mathematics, vol. 13, no. 14, 2245",2025,"Q1"],
+["J26","B. F. Gómez, A. Jayadeep, M. A. V. J. Muthugala, and M. R. Elara","A Framework for Coverage Path Planning of Outdoor Sweeping Robots Deployed in Large Environments","Mathematics, vol. 13, no. 14, 2238",2025,"Q1"],
+["J27","P. K. Chittoor, A. Jayasurya, S. Konduri, E. S. Cruz, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Data-driven selection of decontamination robot locomotion based on terrain compatibility scoring models","Applied Sciences, vol. 15, no. 14, 7781",2025,"Q1"],
+["J28","P. K. Chittoor, B. P. Dandumahanti, P. Veerajagadheswar, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Developing an urban landscape fumigation service robot: A machine-learned, gen-AI-based design trade study","Applied Sciences, vol. 15, no. 4, 2061",2025,"Q1"],
+["J29","M. S. Ahamed, J. J. J. Pey, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Reinforcement Learning for Reconfigurable Robotic Soccer","IEEE Access, vol. 13, pp. 22314–22324",2025,"Q2"],
+["J30","I. D. Wijegunawardana, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Risk-Aware Complete Coverage Path Planning Using Reinforcement Learning","IEEE Transactions on Systems, Man, and Cybernetics: Systems, vol. 55, no. 4, pp. 2476–2488",2025,"Q1"],
+["J31","J. J. J. Pey, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","A Decentralized Partially Observable Markov Decision Process for Complete Coverage Onboard Multiple Shape Changing Reconfigurable Robots","Expert Systems with Applications, vol. 271, 126565",2025,"Q1"],
+["J32","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Tiling Robotics: A New Paradigm of Shape-Morphing Reconfigurable Robots","Advanced Intelligent Systems, vol. 7, no. 9, 2400417",2025,"Q1"],
+["J33","L. J. Weaver, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, M. R. Elara, and Z. S. Saldi","Slosh Measuring Sensor System for Liquid Carrying Robots","IEEE Sensors Letters, vol. 8, no. 11",2024,"Q2"],
+["J34","C. Vikram, M. K. D. M. Mirihagalla, M. S. K. Yeo, Z. Zeng, C. S. C. S. Borusu, M. A. V. J. Muthugala, and M. R. Elara","Door-Density-Aware Path Planning","IEEE Access, vol. 12, pp. 136880–136888",2024,"Q2"],
+["J35","C. S. C. S. Borusu, M. S. K. Yeo, Z. Zeng, M. A. V. J. Muthugala, M. Budig, M. R. Elara, and Y. Wang","Evaluating Robot-Inclusivity of Buildings based on Surface Unevenness","Applied Sciences, vol. 14, no. 17, 7831",2024,"Q1"],
+["J36","W. K. R. Sachinthana, I. D. Wijegunawardana, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Reconfigurable Robotic Exercising Companion","Applied Sciences, vol. 14, no. 16, 7249",2024,"Q1"],
+["J37","A. Ezhilarasu, J. J. J. Pey, M. A. V. J. Muthugala, M. Budig, and M. R. Elara","Enhancing Robot Inclusivity in the Built Environment: A Digital Twin-Assisted Assessment of Design Guideline Compliance","Buildings, vol. 14, no. 5, 1193",2024,"Q2"],
+["J38","Z. Zeng, M. S. K. Yeo, C. S. C. S. Borusu, M. A. V. J. Muthugala, M. Budig, M. R. Elara, and Y. Wang","A Framework for Auditing Robot-Inclusivity of Indoor Environments based on Lighting Condition","Buildings, vol. 14, no. 4, 1110",2024,"Q2"],
+["J39","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Internal Rehearsals for a Reconfigurable Robot to Improve Area Coverage Performance","ACM Transactions on Intelligent Systems and Technology",2024,"Q1"],
+["J40","I. D. Wijegunawardana, M. A. V. J. Muthugala, S. M. B. P. Samarakoon, O. J. Hua, S. G. A. Padmanabha, and M. R. Elara","Insights from autonomy trials of a self-reconfigurable floor-cleaning robot in a public food court","Journal of Field Robotics",2024,"Q1"],
+["J41","M. S. K. Yeo, M. A. V. J. Muthugala, and M. R. Elara","Automated generation of site map graphs for robot-inclusive tactile marker placement","IEEE Access, vol. 11, pp. 138064–138077",2023,"Q2"],
+["J42","I. D. Wijegunawardana, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","FMEA Based Coverage Path Planning Strategy for Floor Cleaning Robots","Advanced Intelligent Systems, vol. 5, no. 11",2023,"Q1"],
+["J43","I. S. Singh, I. D. Wijegunawardana, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Vision-based dirt distribution mapping using deep learning","Scientific Reports, vol. 13, 12741",2023,"Q2"],
+["J44","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","A Review on Human–Robot Proxemics","Electronics, vol. 11, no. 16",2022,""],
+["J45","T. Pathmakumar, M. A. V. J. Muthugala, S. M. B. P. Samarakoon, B. F. Gómez, and M. R. Elara","A Novel Path Planning Strategy for a Cleaning Audit Robot Using Geometrical Features and Swarm Algorithms","Sensors, vol. 22, no. 14",2022,"Q2"],
+["J46","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and M. R. Elara","Adapting Approaching Proxemics of a Service Robot based on Physical User Behavior and Prior Experience","User Modeling and User-Adapted Interaction",2022,"Q1"],
+["J47","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Metaheuristic based navigation of a reconfigurable robot through narrow spaces with shape changing ability","Expert Systems with Applications, vol. 201, 117060",2022,"Q1"],
+["J48","Y. J. Ng, M. S. K. Yeo, Q. B. Ng, M. Budig, M. A. V. J. Muthugala, S. M. B. P. Samarakoon, and M. R. Elara","Application of an adapted FMEA framework for robot-inclusivity of built environments","Scientific Reports, vol. 12, 3408",2022,"Q1"],
+["J49","M. S. K. Yeo, S. M. B. P. Samarakoon, Q. B. Ng, Y. J. Ng, M. A. V. J. Muthugala, M. R. Elara, and R. W. W. Yeong","Robot-Inclusive False Ceiling Design Guidelines","Buildings",2021,"Q2"],
+["J50","A. W. Y. Sang, C. G. Moo, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Design of a Reconfigurable Wall Disinfection Robot","Sensors, vol. 21, no. 18, 6096",2021,"Q1"],
+["J51","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, R. E. Abdulkader, S. W. Si, T. T. Tun, and M. R. Elara","Modelling and Control of a Reconfigurable Robot for Achieving Reconfiguration and Locomotion with Different Shapes","Sensors, vol. 21, 5362",2021,"Q1"],
+["J52","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Toward Obstacle-Specific Morphology for a Reconfigurable Tiling Robot","Journal of Ambient Intelligence and Humanized Computing",2021,"Q1"],
+["J53","R. Parween, M. A. V. J. Muthugala, M. V. Heredia, K. Elangovan, and M. R. Elara","Collision Avoidance and Stability Study of a Self-Reconfigurable Drainage Robot","Sensors, vol. 21, no. 11, 3744",2021,"Q1"],
+["J54","M. S. K. Yeo, S. M. B. P. Samarakoon, Q. B. Ng, M. A. V. J. Muthugala, and M. R. Elara","Design of Robot-Inclusive Vertical Green Landscape","Buildings, vol. 5, no. 3, 203",2021,"Q2"],
+["J55","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, M. R. Elara, and Selvakumaran","Toward Pleomorphic Reconfigurable Robots for Optimum Coverage","Complexity, vol. 2021, 3705365",2021,"Q2"],
+["J56","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, A. V. Le, and M. R. Elara","Toward Complete Area Coverage of a Reconfigurable Tiling Robot by Following Obstacle Shape","Complex & Intelligent Systems, vol. 7, no. 2, pp. 741–751",2021,"Q2"],
+["J57","A. V. Le, P. Veerajagadheswar, P. T. Kyaw, M. A. V. J. Muthugala, M. R. Elara, M. Kumar, and N. H. K. Nhan","Towards Optimal Hydro-Blasting in Reconfigurable Climbing System for Corroded Ship Hull Cleaning and Maintenance","Expert Systems with Applications",2020,"Q1"],
+["J58","A. V. Le, P. T. Kyaw, P. Veerajagadheswar, M. A. V. J. Muthugala, M. R. Elara, M. Kumar, and N. H. K. Nhan","Reinforcement Learning-based Optimal Complete Water-blasting for Autonomous Ship Hull Corrosion Cleaning System","Ocean Engineering",2020,"Q1"],
+["J59","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, A. V. Le, and M. R. Elara","hTetro-Infi: A Reconfigurable Floor Cleaning Robot with Infinite Morphologies","IEEE Access",2020,"Q1"],
+["J60","R. Balakrishnan, J. Yin, M. R. Elara, Y. K. Tamilselvam, M. M. Rayguru, M. A. V. J. Muthugala, and B. F. Gómez","Human Support Robot for Cleaning and Maintenance of Door Handles using Deep Learning Framework","Sensors, vol. 20, no. 12",2020,"Q1"],
+["J61","M. M. Rayguru, M. R. Elara, R. Balakrishnan, M. A. V. J. Muthugala, and S. M. B. P. Samarakoon","A Path Tracking Strategy for Car Like Robots With Sensor Unpredictability and Measurement Errors","Sensors, vol. 20, no. 11",2020,"Q1"],
+["J62","H. M. R. T. Bandara, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and D. P. Chandima","Understanding uncertain information in vocal description for creating virtual spatial maps","Journal of Behavioral Robotics, vol. 10, no. 1",2019,""],
+["C1","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, I. D. Wijegunawardana, and M. R. Elara","Improving Coverage Performance of a Size-reconfigurable Robot based on Overlapping and Reconfiguration Reduction Criteria","IEEE ICRA, Atlanta",2025,"ICRA"],
+["C2","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, R. E. Abdulkader, and M. R. Elara","Toward Mass Customization of a Robot’s Morphology Design for Improving Area Coverage","IEEE ICRA, Yokohama",2024,"ICRA"],
+["C3","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, and M. R. Elara","Online Coverage Path Planning Scheme for a Size-Variable Robot","IEEE ICRA, London, pp. 5688–5694",2023,"ICRA"],
+["C4","M. A. V. J. Muthugala, M. Vega-Heredia, N. H. Lin, S. M. B. P. Samarakoon, and M. R. Elara","Adhesion Risk Assessment of An Aircraft Inspection Robot for Improving Operator Awareness","IEEE/RSJ IROS, Kyoto, pp. 5131–5138",2022,"IROS"],
+["C5","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, and M. R. Elara","Design by Robot: A Human-Robot Collaborative Framework for Improving Productivity of a Floor Cleaning Robot","IEEE ICRA, Philadelphia",2022,"ICRA"],
+["C6","M. A. V. J. Muthugala, S. M. B. P. Samarakoon, and M. R. Elara","Variation of Area Coverage per Polyform: An analysis to assist users in selecting a robot","27th Int. Conf. on Artificial Life and Robotics, Beppu, pp. 524–528",2022,""],
+["C7","M. A. V. J. Muthugala, M. Vega-Heredia, N. H. Lin, S. M. B. P. Samarakoon, A. A. Hayat, and M. R. Elara","Design and Development of a Reconfigurable Aircraft Maintenance Robot","IEEE/IFToMM ReMAR 2021, Toronto, pp. 16–25",2021,""],
+["C8","M. A. V. J. Muthugala, M. Vega-Heredia, A. Vengadesh, G. Sriharsha, and M. R. Elara","Design of an Adhesion-Aware Facade Cleaning Robot","IEEE/RSJ IROS, Macau, pp. 1441–1447",2019,"IROS"],
+["C9","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Interpreting Uncertain Information Related to Relative References for Improved Navigational Command Understanding of Service Robots","IEEE/RSJ IROS, Vancouver, pp. 6567–6574",2017,"IROS"],
+["C10","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Interpreting Fuzzy Directional Information in Navigational Commands Based on Arrangement of the Surrounding Environment","FUZZ-IEEE, Naples",2017,""],
+["C11","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Interpretation of Uncertain Information in Mobile Service Robots by Analyzing Surrounding Spatial Arrangement Based on Occupied Density Variation","IEEE/RSJ IROS, Daejeon, pp. 1517–1523",2016,"IROS"],
+["C12","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Enhancing Human-Robot Interaction by Interpreting Uncertain Information in Navigational Commands Based on Experience and Environment","IEEE ICRA, Stockholm, pp. 2915–2921",2016,"ICRA"],
+["C13","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","MIRob: An Intelligent Service Robot that Learns from Interactive Discussions while Handling Uncertain Information in User Instructions","MERCon, Moratuwa, pp. 397–402",2016,"AW:Best paper"],
+["C14","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Interpreting Fuzzy Linguistic Information in User Commands by Analyzing Movement Restrictions in the Surrounding Environment","MERCon, Moratuwa, pp. 124–129",2015,""],
+["C15","M. A. V. J. Muthugala and A. G. B. P. Jayasekara","Synthesizing Fuzzy Linguistic Vocal Responses by Adapting Perception of Robot Based on Visual Attention","ICIAfS, Colombo, pp. 1–6",2014,""],
+["C16","M. A. V. J. Muthugala, M. K. B. S. Munasinghe, M. H. C. Lakshan, L. H. H. Madurangi, and A. G. B. P. Jayasekara","Design of an interactive robotic head with human-like movements","IEEE ICIIS, Peradeniya, pp. 355–360",2013,""],
+["C17","Z. Yang, A. Y. S. Wan, M. A. V. J. Muthugala, and M. R. Elara","GAT-based Reinforcement Learning for NBV Selection in Semantic Visual Active SLAM under Dynamic Environments","IEEE/RSJ IROS (accepted)",2026,"IROS"],
+["C18","W. K. R. Sachinthana, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","LARVO-RRT*: Learning Guided Adaptive Reconfiguration with Vector field Oriented RRT*","IEEE ICRA, Vienna",2026,"ICRA"],
+["C19","H. A. D. Madhusanka, R. M. S. Lakruwani, K. P. G. Sandamal, A. G. T. Gimras, A. G. B. P. Jayasekara, M. A. V. J. Muthugala, and M. R. Elara","Adaptive Navigation of a Transformer Robot in Warehouse Environments","ICIPRoB, Colombo",2026,""],
+["C20","P. Li, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, P. K. Chittoor, M. R. Elara, and R. Nagi","Occupancy-belief Planning of Plant Manipulation for Staking","IEEE/RSJ IROS, Hangzhou",2025,"IROS"],
+["C21","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, W. K. R. Sachinthana, and M. R. Elara","Human–Robot Co-Design for Cleaning: Leveraging Vision Language Model and Multi-Objective Optimization for Adaptive Layouts","Int. Conf. on Social Robotics + AI, Naples",2025,"AW:Best paper"],
+["C22","W. K. R. Sachinthana, N. Prabakar, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Online Coverage Path Planning in LIDAR Perception Constrained Environments","IEEE TENCON, Singapore",2024,""],
+["C23","M. R. Dilhara, M. S. Amith, U. P. Ruwanpura, A. G. B. P. Jayasekara, M. A. V. J. Muthugala, and M. R. Elara","Emotion-Responsive and Interactive Self-reconfigurable Robot for Children","Int. Conf. on Electrical Engineering, Colombo",2024,""],
+["C24","A. Chakravarty, M. X. Grey, M. A. V. J. Muthugala, and M. R. Elara","Time-Ordered Ad-hoc Resource Sharing for Independent Robotic Agents","IEEE/RSJ IROS, Abu Dhabi, pp. 10080–10087",2024,"IROS"],
+["C25","J. J. J. Pey, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","A Decentralized Partially Observable Markov Decision Process for Dynamic Obstacle Avoidance and Complete Area Coverage using Multiple Reconfigurable Robots","IEEE/RSJ IROS, Abu Dhabi, pp. 8022–8029",2024,"IROS"],
+["C26","W. K. R. Sachinthana, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Dynamic Reconfiguration Integrated Nested A*: A Path Planner for Reconfigurable Robot to Improve Performance in Confined Spaces","IEEE/RSJ IROS, Abu Dhabi, pp. 5473–5480",2024,"IROS"],
+["C27","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Online Complete Coverage Path Planning of a Reconfigurable Robot using Glasius Bio-inspired Neural Network and Genetic Algorithm","IEEE/RSJ IROS, Kyoto, pp. 5744–5751",2022,"IROS"],
+["C28","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, M. Kalimuthu, S. K. Chandrasekaran, and M. R. Elara","Design of a Reconfigurable Robot with Size-Adaptive Path Planner","IEEE/RSJ IROS, Kyoto, pp. 157–164",2022,"IROS"],
+["C29","R. F. G. Azcarate, S. C. Daniela, A. A. Hayat, L. Yi, M. A. V. J. Muthugala, Q. R. Tang, A. P. Povendhan, K. J. K. Leong, and M. R. Elara","Shared Autonomy for Safety Between a Self-reconfigurable Robot and a Teleoperator Using Multi-layer Fuzzy Logic","IEEE/RSJ IROS, Kyoto, pp. 141–148",2022,"IROS"],
+["C30","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Global and Local Area Coverage Path Planner for a Reconfigurable Robot","IEEE CEC, Padua",2022,""],
+["C31","M. S. K. Yeo, A. Q. B. Ng, T. Y. J. Ng, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, M. R. Elara, and D. T. Ng","Robot-inclusive Guidelines for Drain Inspection","ICITACEE 2021, Semarang",2021,""],
+["C32","A. A. Hayat, S. C. Eduardo, M. A. V. J. Muthugala, A. L. Pinxian, and M. R. Elara","Urodela: Design of a Reconfigurable Robotic System for Landscapes Maintenance","IEEE/IFToMM ReMAR 2021, Toronto, pp. 722–731",2021,""],
+["C33","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and M. R. Elara","An Exploratory Study on Proxemics Preferences of Humans in Accordance with Attributes of Service Robots","IEEE RO-MAN, Delhi",2019,""],
+["C34","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Proxemics and Approach Evaluation by Service Robot Based on User Behavior in Domestic Environment","IEEE/RSJ IROS, Madrid, pp. 8192–8199",2018,"IROS"],
+["C35","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Identifying Approaching Behavior of a Person During a Conversation: A Human Study for Improving Human-Robot Interaction","IEEE SMC, Miyazaki",2018,""],
+["C36","H. M. R. T. Bandara, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and D. P. Chandima","Grounding Object Attributes through Interactive Discussion for Building Cognitive Maps in Service Robots","IEEE SMC, Miyazaki",2018,""],
+["C37","S. M. S. S. Senarathna, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Intelligent Robot Companion Capable of Controlling Environment Ambiance of Smart Houses by Observing User’s Behavior","EECon, Colombo",2018,""],
+["C38","M. M. S. N. Edirisinghe, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Application of Robot Autobiographical Memory in Long-Term Human-Robot Social Interactions","EECon, Colombo",2018,""],
+["C39","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Replicating Natural Approaching Behavior of Humans for Improving Robot’s Approach toward Two Persons During a Conversation","IEEE RO-MAN, Nanjing, pp. 552–558",2018,"AW:Nanjing City Prize"],
+["C40","H. P. C. Sirithunge, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and D. P. Chandima","A Wizard of Oz Study of Human Interest towards Robot Initiated Human-Robot Interaction","IEEE RO-MAN, Nanjing, pp. 515–521",2018,""],
+["C41","H. M. R. T. Bandara, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and D. P. Chandima","Cognitive Spatial Representative Map for Interactive Conversational Model of Service Robot","IEEE RO-MAN, Nanjing, pp. 686–691",2018,""],
+["C42","M. M. S. N. Edirisinghe, M. A. V. J. Muthugala, H. P. C. Sirithunge, and A. G. B. P. Jayasekara","Enhancing Overall Object Placement by Understanding Uncertain Spatial and Qualitative Distance Information in User Commands","IEEE ICRA, Brisbane",2018,"ICRA"],
+["C43","G. W. M. Manuhara, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Design and Development of an Interactive Service Robot as a Conversational Companion for Elderly People","MERCon, Moratuwa",2018,""],
+["C44","H. G. M. T. Yashoda, A. M. S. Piumal, P. G. S. P. Polgahapitiya, M. M. M. Mubeen, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Design and Development of a Smart Wheelchair with Multiple Control Interfaces","MERCon, Moratuwa",2018,""],
+["C45","P. H. D. A. S. Srimal, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Deictic Gesture Enhanced Fuzzy Spatial Relation Grounding in Natural Language","FUZZ-IEEE, Naples",2017,""],
+["C46","H. P. C. Sirithunge, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and D. P. Chandima","Interpretation of Interaction Demanding of a User Based on Nonverbal Behavior in a Domestic Environment","FUZZ-IEEE, Naples",2017,""],
+["C47","P. H. D. A. S. Srimal, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Identifying Spatial Terminology and Boundaries for Human Robot Interaction: A Human Study","MERCon, Moratuwa, pp. 46–51",2017,""],
+["C48","A. G. N. Bandara, B. M. A. N. Balasooriya, H. G. I. W. Bandara, K. S. Buddhasiri, M. A. V. J. Muthugala, A. G. B. P. Jayasekara, and D. P. Chandima","Smart Irrigation Controlling System for Green Roofs Based on Predicted Evapotranspiration","EECon, Colombo, pp. 31–36",2016,""],
+["C49","A. L. S. Sriwardene, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Vision Based Smart Driver Assisting System for Locomotives","IEEE ICIAfS, Galle, pp. 1–6",2016,""],
+["C50","A. G. N. Jayasekara, M. A. V. J. Muthugala, and A. G. B. P. Jayasekara","Design and Development of an Anthropomorphic Robotic Head with Force Attentive Reflex Actions","MERCon, Moratuwa, pp. 409–414",2016,""],
+["W1","M. O. Arukgoda, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, W. K. R. Sachinthana, and M. R. Elara","Determining the Optimum Placement of LiDAR Sensors for Autonomous Robots","Position paper, IEEE ARSO, Vienna",2026,""],
+["W2","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, W. K. R. Sachinthana, and M. R. Elara","Design by Robot: Relocating Obstacles for Efficient Mobile Robot Navigation","Late-breaking results, IEEE ICRA, Vienna",2026,""],
+["W3","A. Chakravarty, M. X. Grey, M. A. V. J. Muthugala, and M. R. Elara","Extending PiBT to support Heterogeneous Robot Fleets","AAAI Workshop on Multi-Agent Path Finding, Singapore",2026,""],
+["R1","S. M. B. P. Samarakoon, M. A. V. J. Muthugala, W. K. R. Sachinthana, and M. R. Elara","Hijacking Robots with a Piece of Paper: A Systematic Study of Physical Prompt Injection in VLM-Controlled Robots","arXiv preprint, arXiv:2608.05715",2026,"Preprint"],
+["R2","M. A. V. J. Muthugala and co-authors","Foundation Models for Robotic Tasks: Survey, Challenges and Future Directions","TechRxiv preprint, doi:10.36227/techrxiv.175321822.20121795",2025,"Preprint"],
+["W4","H. D. S. Himaruwan, S. M. B. P. Samarakoon, M. A. V. J. Muthugala, and M. R. Elara","Development of a Docking Mechanism for Reconfigurable Modular Robots Using Additive Manufacturing","Int. Conf. on Future of AM, Singapore",2025,""]
+];
+
+/* Impact factors from the CV (year of IF as listed there) */
+const IF={J1:"6.954 (2020)",J2:"3.467 (2020)",J3:"3.576 (2020)",J4:"3.576 (2020)",J5:"3.275 (2019)",J6:"3.031 (2018)",J7:"2.02 (2018)",J8:"4.098 (2018)",J9:"4.313 (2018)",J10:"2.143 (2018)",J11:"1.186 (2018)",J12:"4.098 (2018)",J13:"3.557 (2017)",J14:"1.689 (2017)",J15:"4.2 (2025)",J16:"2.2 (2024)",J17:"7.9 (2024)",J18:"3.9 (2024)",J19:"7.3 (2024)",J20:"2.3 (2023)",J21:"2.3 (2023)",J22:"7.5 (2023)",J23:"3.6 (2024)",J24:"2.3 (2023)",J25:"2.3 (2023)",J26:"2.3 (2023)",J27:"2.5 (2023)",J28:"2.5 (2023)",J29:"3.4 (2023)",J30:"8.6 (2023)",J31:"7.5 (2023)",J32:"6.8 (2023)",J33:"2.2 (2023)",J34:"3.4 (2023)",J35:"2.5 (2023)",J36:"2.5 (2023)",J37:"3.8 (2022)",J38:"3.8 (2022)",J39:"10.489 (2021)",J40:"8.3 (2022)",J41:"3.9 (2022)",J42:"7.4 (2022)",J43:"4.6 (2022)",J44:"2.690 (2021)",J45:"3.847 (2021)",J46:"4.412 (2020)",J47:"6.954 (2020)",J48:"4.380 (2020)",J49:"2.648 (2020)",J50:"3.576 (2020)",J51:"3.576 (2020)",J52:"7.104 (2020)",J53:"3.576 (2020)",J54:"2.648 (2020)",J55:"2.833 (2020)",J56:"4.927 (2020)",J57:"5.452 (2019)",J58:"3.068 (2019)",J59:"4.098 (2018)",J60:"3.031 (2018)",J61:"3.031 (2018)"};
+
+/* Short venue names for chips */
+const LINK={R1:"https://arxiv.org/abs/2608.05715",R2:"https://doi.org/10.36227/techrxiv.175321822.20121795"};
+function shortVenue(p){
+  const v=p[3];
+  const m=[[/ICRA/,'ICRA'],[/IROS/,'IROS'],[/RO-MAN/,'RO-MAN'],[/Social Robotics/,'ICSR + AI'],[/Expert Systems/,'ESWA'],[/Mechatronics/,'IEEE/ASME T-MECH'],[/Systems, Man/,'IEEE T-SMC: Systems'],[/ACM Transactions/,'ACM TIST'],[/Advanced Intelligent/,'Adv. Intell. Syst.'],[/User Modeling/,'UMUAI'],[/Automation in Construction/,'Autom. Constr.'],[/Field Robotics/,'J. Field Robotics'],[/Scientific Reports/,'Scientific Reports'],[/IEEE Access/,'IEEE Access'],[/Buildings/,'Buildings'],[/Applied Sciences/,'Applied Sciences'],[/ReMAR/,'ReMAR'],[/Humanized Computing/,'JAIHC'],[/Ocean Engineering/,'Ocean Engineering']];
+  for(const [r,n] of m) if(r.test(v)) return n;
+  return v.split(',')[0];
+}
+const SHORT={R1:"arXiv",R2:"TechRxiv",J59:"IEEE Access",J32:"Adv. Intell. Syst.",J19:"IEEE/ASME T-MECH",C18:"ICRA",C1:"ICRA",C2:"ICRA",J30:"IEEE T-SMC: Systems",J1:"ESWA",J31:"ESWA",J22:"ESWA",C24:"IROS",J16:"Mathematics",C21:"ICSR + AI",C17:"IROS",J18:"Scientific Reports",W2:"ICRA LBR",J12:"IEEE Access",J46:"UMUAI",C12:"ICRA",C9:"IROS",C39:"RO-MAN",J48:"Scientific Reports",J35:"Applied Sciences",J38:"Buildings",J41:"IEEE Access",J40:"J. Field Robotics",C4:"IROS",C8:"IROS",J57:"ESWA",J3:"Sensors"};
+
+/* Selected publications: ICRA/IROS, IEEE/ACM Transactions, JFR, ESWA, AIS, Automation in Construction */
+const SELECTED=new Set(["C17","C18","C1","C2","C3","C5","C12","C42","C4","C8","C9","C11","C20","C24","C25","C26","C27","C28","C29","C34",
+ "C21","C33","C39","C40","C41",
+ "J19","J30","J39","J40","J1","J22","J31","J47","J57","J32","J42","J9",
+ "J46","J52","J58","J18","J48","J12","J13"]);
+const SELGROUPS=[
+ ["Journals",p=>p[0][0]==="J"],
+ ["Conferences",p=>p[0][0]==="C"]
+];
+
+/* Papers where I am corresponding author — add paper IDs here, e.g. "J22","C26" */
+const CORR=new Set([]);
+
+const BY={};P.forEach(p=>BY[p[0]]=p);
+const ME="M. A. V. J. Muthugala";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hiMe=s=>esc(s).replace(ME,'<mark>'+ME+'</mark>');
+const isFirst=p=>p[1].startsWith(ME)&&!/co-authors/.test(p[1]);
+const TYPE={J:"Journal article",C:"Conference paper",W:"Workshop / abstract",R:"Preprint"};
+function badge(f){
+  if(!f) return '';
+  if(f.startsWith('AW:')) return '<span class="bdg aw">'+esc(f.slice(3))+'</span>';
+  if(f==='Q1') return '<span class="bdg q1">JCR Q1</span>';
+  if(f==='Q2') return '<span class="bdg">JCR Q2</span>';
+  return '<span class="bdg">'+esc(f)+'</span>';
+}
+
+/* ---------- detail panel ---------- */
+const dlg=document.getElementById('dlg'),dlgBody=document.getElementById('dlg-body');
+let lastFocus=null;
+function openPaper(id){
+  const p=BY[id];if(!p)return;
+  lastFocus=document.activeElement;
+  const roles=[isFirst(p)?'First author':'',CORR.has(id)?'Corresponding author':''].filter(Boolean).join(' · ');
+  const venueName=p[3].split(',')[0];
+  dlgBody.innerHTML=
+   '<div class="dlg-top"><span>'+id+' · '+TYPE[id[0]]+' · '+p[4]+'</span><button class="dlg-x" type="button" id="dlg-close">Close</button></div>'+
+   '<h3 id="dlg-title">'+esc(p[2])+'</h3>'+
+   '<dl><dt>Authors</dt><dd>'+hiMe(p[1])+'</dd>'+
+   '<dt>Venue</dt><dd>'+esc(p[3])+'</dd>'+
+   '<dt>Year</dt><dd>'+p[4]+'</dd>'+
+   (IF[id]?'<dt>Impact factor</dt><dd>'+IF[id]+'</dd>':'')+
+   (p[5]?'<dt>Notes</dt><dd>'+badge(p[5])+'</dd>':'')+
+   (roles?'<dt>My role</dt><dd>'+roles+'</dd>':'')+
+   '</dl>'+
+   '<div class="dlg-act">'+(LINK[id]?'<a class="btn primary" target="_blank" rel="noopener" href="'+LINK[id]+'">Read the paper ↗</a>':'')+'<a class="btn'+(LINK[id]?'':' primary')+'" target="_blank" rel="noopener" href="https://scholar.google.com/scholar?q='+encodeURIComponent('"'+p[2]+'"')+'">Find on Google Scholar ↗</a>'+
+   (id[0]!=='R'?'<button class="btn" type="button" id="dlg-goto">Show in publication list</button>':'')+'</div>';
+  dlg.hidden=false;document.body.style.overflow='hidden';
+  document.getElementById('dlg-close').onclick=closePaper;
+  const g=document.getElementById('dlg-goto');if(g)g.onclick=()=>{closePaper();showInList(id)};
+  document.getElementById('dlg-close').focus();
+}
+function closePaper(){dlg.hidden=true;document.body.style.overflow='';if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+dlg.addEventListener('click',e=>{if(e.target===dlg)closePaper()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!dlg.hidden)closePaper()});
+
+/* ---------- research theme chips ---------- */
+document.querySelectorAll('.refs[data-refs]').forEach(box=>{
+  box.innerHTML=box.dataset.refs.split(',').filter(id=>BY[id]).sort((a,b)=>BY[b][4]-BY[a][4]).map(id=>{const p=BY[id];
+    return '<button type="button" class="ref" data-id="'+id+'" title="'+esc(p[2])+'">'+esc(SHORT[id]||shortVenue(p))+'<span class="y">'+p[4]+'</span></button>'}).join('');
+});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)openPaper(b.dataset.id)});
+
+/* ---------- publication list ---------- */
+const list=document.getElementById('publist'),q=document.getElementById('pubsearch');
+let scope='sel';
+document.getElementById('n-sel').textContent=SELECTED.size;
+const PUBS=P.filter(p=>p[0][0]!=='R');
+const inScope=(p,sc)=>sc==='sel'?SELECTED.has(p[0]):sc==='J'?p[0][0]==='J':(p[0][0]==='C'||p[0][0]==='W');
+document.getElementById('n-J').textContent=PUBS.filter(p=>inScope(p,'J')).length;
+document.getElementById('n-C').textContent=PUBS.filter(p=>inScope(p,'C')).length;
+function pubRow(p){
+  const r=[isFirst(p)?'first':'',CORR.has(p[0])?'corresponding':''].filter(Boolean).join(' · ');
+  return '<div class="pub" id="pub-'+p[0]+'"><span class="id">'+p[0]+'</span><div><div class="t"><button type="button" data-id="'+p[0]+'">'+esc(p[2])+'</button></div><div class="a">'+hiMe(p[1])+'</div><div class="v">'+esc(p[3])+', '+p[4]+'<span class="badges">'+badge(p[5])+'</span>'+(r?'<span class="roles">'+r+'</span>':'')+'</div></div></div>';
+}
+const order=(a,b)=>b[4]-a[4]||a[0][0].localeCompare(b[0][0])||parseInt(a[0].slice(1))-parseInt(b[0].slice(1));
+function render(){
+  const term=q.value.trim().toLowerCase(),role='any';
+  let rows=PUBS.filter(p=>inScope(p,scope)
+    &&(role==='any'||isFirst(p)||CORR.has(p[0]))
+    &&(!term||(p[1]+' '+p[2]+' '+p[3]+' '+p[4]).toLowerCase().includes(term))).sort(order);
+  if(!rows.length){
+    list.innerHTML='<p class="empty">'+'No papers match. Try a co-author surname or a venue such as “IROS”, or switch lists.'+'</p>';return}
+  let html='';
+  if(scope==='sel'){
+    SELGROUPS.forEach(([name,fn])=>{const g=rows.filter(fn);if(!g.length)return;
+      html+='<div class="grp"><span>'+name+'</span><span>'+g.length+'</span></div>'+g.map(pubRow).join('')});
+    html+='<p class="scopenote"><button type="button" class="btn" data-go="J">All journals</button> <button type="button" class="btn" data-go="C">All conferences</button></p>';
+  }else{
+    let yr=null;const counts={};rows.forEach(r=>counts[r[4]]=(counts[r[4]]||0)+1);
+    rows.forEach(p=>{if(p[4]!==yr){yr=p[4];html+='<div class="yr">'+yr+'<small>'+counts[yr]+(counts[yr]>1?' papers':' paper')+'</small></div>'}html+=pubRow(p)});
+  }
+  list.innerHTML=html;
+  list.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>setScope(b.dataset.go));
+}
+function setScope(s){scope=s;document.querySelectorAll('[data-scope]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.scope===s));render()}
+function showInList(id){
+  q.value='';
+  setScope(SELECTED.has(id)&&scope==='sel'?'sel':(id[0]==='J'?'J':'C'));
+  const el=document.getElementById('pub-'+id);if(!el)return;
+  el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+  el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');
+}
+document.querySelectorAll('[data-scope]').forEach(b=>b.addEventListener('click',()=>setScope(b.dataset.scope)));
+q.addEventListener('input',render);
+render();
+
+/* copy buttons */
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.dataset.copy);const t=el.dataset.u?el.dataset.u+'@'+el.dataset.d:el.textContent;
+  const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected'};
+  try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
+}));
+
+/* nav highlight */
+(function(){
+  const links=[...document.querySelectorAll('.nav a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-40% 0px -55% 0px'});
+  secs.forEach(s=>s&&io.observe(s));
+})();
+
+</script>
+
+</body>
+</html>
