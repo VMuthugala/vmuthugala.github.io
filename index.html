@@ -114,6 +114,10 @@ h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.08;margin:
 .metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:8px}
 .metric{padding:18px 16px;border-left:1px solid var(--line)}
 .metric:first-child{border-left:0;padding-left:0}
+.honour{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:16px 0;border-bottom:1px solid var(--line);font-size:var(--step-1)}
+.honour b{font-weight:600}
+.honour a{margin-left:auto;font-family:var(--f-mono);font-size:var(--step--1);text-decoration:none}
+@media (max-width:560px){.honour a{margin-left:0}}
 .metric b{display:block;font-family:var(--f-display);font-size:var(--step-3);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
 .metric span{display:block;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.35}
 @media (max-width:880px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.metric:nth-child(4){border-left:0;padding-left:0}.metric:nth-child(n+4){border-top:1px solid var(--line)}}
@@ -267,12 +271,17 @@ footer{padding-block:28px 40px;font-family:var(--f-mono);font-size:12px;color:va
   </div>
 
   <div class="metrics" aria-label="Research metrics">
-    <div class="metric"><b>100+</b><span>refereed papers</span></div>
+    <div class="metric"><b>110+</b><span>publications</span></div>
     <div class="metric"><b>1,744</b><span>citations<br>Google Scholar</span></div>
     <div class="metric"><b>23</b><span>h-index</span></div>
     <div class="metric"><b>40</b><span>JCR Q1 journal papers</span></div>
     <div class="metric"><b>3</b><span>granted SG patents</span></div>
     <div class="metric"><b>SGD 10M+</b><span>in grants · led proposal writing and research execution</span></div>
+  </div>
+  <div class="honour">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z" fill="var(--accent)"/></svg>
+    <span>Recipient of the <b>IROS 2024 New Generation Star Award</b></span>
+    <a href="#awards">All awards →</a>
   </div>
 
   <!-- NEWS -->
@@ -510,7 +519,7 @@ footer{padding-block:28px 40px;font-family:var(--f-mono);font-size:12px;color:va
       <div class="cols">
         <div class="block"><h3>Research</h3>
           <ul class="rows">
-            <li>Best Paper Award, ICSR + AI 2025<span class="d">Sep 2025</span></li>
+            <li>Best Paper Award, International Conference on Social Robotics + AI (ICSR + AI) 2025, Naples<span class="d">Sep 2025</span></li>
             <li>New Generation Star Award, IROS 2024<span class="d">Oct 2024</span></li>
             <li>First runner-up, MathWorks Mini Drone Competition, IROS 2018<span class="d">Oct 2018</span></li>
             <li>Nanjing City Prize, Robotics Innovation Awards, RO-MAN 2018<span class="d">Aug 2018</span></li>
